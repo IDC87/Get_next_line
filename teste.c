@@ -27,7 +27,7 @@ int main()
 
     fd = open("The Age demanded.txt", O_RDONLY, 0600);
 
-    printf("%ld\n\n", sizeof(fd));
+    printf("\n%ld\n\n", sizeof(fd));
 
     buf = (char *)malloc(sizeof(char *) * sizeof(fd));
 
