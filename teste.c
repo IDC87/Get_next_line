@@ -33,7 +33,7 @@ int main()
 
     if (fd == -1)
     {
-        printf("ERROR READING!\n");
+        printf("\nERROR READING!\n");
         return (0);
     }
    int LER = read(fd, &buf, 400);
