@@ -14,24 +14,31 @@
 #include<stdio.h> 
 #include <fcntl.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+int file_size()
+
 
 int main()
 {
     int fd;
-    char buf[200];
+    char *buf;
 
     fd = open("The Age demanded.txt", O_RDONLY, 0600);
+
+    printf("%ld\n\n", sizeof(fd));
+
+    buf = (char *)malloc(sizeof(char *) * sizeof(fd));
 
     if (fd == -1)
     {
         printf("ERROR READING!\n");
         return (0);
     }
-   int LER = read(fd, buf, 200);
+   int LER = read(fd, &buf, 400);
 
-    write(1, &LER, 200);
-
-    
+    write(1, &LER, 400);   
     
 
     return (0);
