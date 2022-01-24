@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   to_read.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/16 13:20:26 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/01/16 13:20:26 by ivda-cru         ###   ########.fr       */
+/*   Created: 2022/01/14 16:34:22 by ivda-cru          #+#    #+#             */
+/*   Updated: 2022/01/14 16:34:22 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "get_next_line.h"
 
-# define GET_NEXT_LINE_H
+/* int read_size(fd)
+{
+    char aux[1000];
+    int file_size;
 
-#include <unistd.h>
-#include<stdio.h> 
-#include <fcntl.h>              //>>>>>>>>>>APAGAR O QUE NAO INTERESSA<<<<<<<<<<<
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+    file_size = read(fd, aux + 1, sizeof(aux) + 1);
 
-#endif
+    return (file_size);
+
+}
+ */
+
+int to_read()
+{
+   fd = open("The_Age_demanded", O_RDONLY);
+
+   return (fd);
+}

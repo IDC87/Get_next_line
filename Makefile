@@ -135,11 +135,12 @@ TARGET = program
 Trim = PS1="\W >"
 Trim2 = PS1="[\W]\\$ "
 Trimlength = PROMPT_DIRTRIM=1
+Trim_custom = PS1='\e[36;1m\u@\h: \e[34m\W\e[0m\$ '
 
 
 #EXTRAS
 SHOUT = say
-SHELL = /bin/sh
+SHELL = /bin/bash
 #SHELL := /bin/bash
 count_message = Number of source files in folder
 
@@ -255,7 +256,7 @@ Libft: $(SRC)
 trim:
 	$(Trim)
 trim2:
-	PS1='\e[36;1m\u@\h: \e[34m\W\e[0m\$ '
+	$(Trim_custom)
 
 cfiles:
 	@echo
