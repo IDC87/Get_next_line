@@ -11,22 +11,33 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <sys/fcntl.h>
 
-/* int read_size(fd)
+// buffer at 29
+
+char *get_next_line(int fd)
 {
-    char aux[1000];
-    int file_size;
+    char *line;
+   static char buf[BUFFER_SIZE];
+   int read_size;
 
-    file_size = read(fd, aux + 1, sizeof(aux) + 1);
+    // (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1)); // sem memoria alocada da seg fault no final
 
-    return (file_size);
+   read_size = read(fd, buf, BUFFER_SIZE);
 
+
+   printf("\n%d\n", read_size);
+
+   return (line);
 }
- */
 
-int to_read()
+int main()
 {
-   fd = open("The_Age_demanded", O_RDONLY);
+    int fd;
 
-   return (fd);
+    fd = open("The_Age_demanded.txt", O_RDONLY);
+
+    printf("\n%s\n", get_next_line(fd));
+
+    return (0);
 }

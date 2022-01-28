@@ -22,32 +22,39 @@
 // A FAZER:
 // - encontrar uma maneira de ler a linha do file apenas ate ao \n. (usar o strchr perhapsss)
 // - otimizar o buffer para ser variavel consoante a linha
+// TENTAR CRIAR A FUNCAO PARA LER CASO O BUFFER NAO CHEGE A QUEBRA DE LINHA
 
 char *get_next_line(int fd)
 {
     
      int BUFFER_SIZE;
     static char str[273];
-    char *str2;
+    char *ret;
     int i = 0;
+
     int rd;
 
-    BUFFER_SIZE = 29;
+    
 
-    while(rd != 0)
+    BUFFER_SIZE = 10000;
+
+    rd = read(fd, str, BUFFER_SIZE);
+
+    /* while(rd != 0)
     {
         
-        rd = read(fd, str, BUFFER_SIZE); // depois de lido move o ponteiro para o index correspondente do n de bytes lido do buffer      
-       
-        if (str[i] != '\n')
-        {
+        rd = read(fd, str, BUFFER_SIZE);  depois de lido move o ponteiro para o index correspondente do n de bytes lido do buffer      
 
-            //NESTA SECCAO E SUPOSTO LER APENAS ATE A QUEBRA DE LINHA
-        /* printf("-------------------------------");
+        ret = strchr(str, 97);
+
+         if (str[i] != '\n')
+        {
+            
+        printf("-------------------------------");
         printf("\n%d ciclo\n", i);
         printf("%d bytes\n", rd);
         printf("\n%s\n", str);        
-        printf("-------------------------------\n"); */
+        printf("-------------------------------\n");
         }
         else
         {
@@ -55,22 +62,27 @@ char *get_next_line(int fd)
             {
                 str[i] = 0;
                 i++;
-            }
-            
+            }            
         }
+        printf("\n%d\n", i);
         break;       
 
-         /* if (rd == 0)
-         str[10] = '\0'; */
+         if (rd == 0)
+         str[10] = '\0'; 
         
-        /* if (rd <= 0)
-            break; */
-            
+         if (rd <= 0)
+            break;             
 
-    }   
-    str[BUFFER_SIZE] = '\0';
+    }    */
+    //str[BUFFER_SIZE] = '\0';
 
     //printf("\nSTRING FINAL \n%s\n", str);
+
+    //printf("\n RETURN STRING IS: %s ", ret);
+
+    printf("\n%d\n", rd);
+
+    
 
     
 
@@ -80,6 +92,7 @@ char *get_next_line(int fd)
 int main()
 {
     int fd;
+    int i = 0;
 
     fd = 0;
 
@@ -91,7 +104,11 @@ int main()
         return (0);
     }
 
-    printf ("\n%s\n\n",get_next_line(fd));
+    while (i < 1)
+    {
+        printf ("\n%s\n",get_next_line(fd));
+        i++;
+    }
 
     
 
