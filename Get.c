@@ -12,27 +12,30 @@
 
 #include "get_next_line.h"
 
+//ssize_t read(int fd, void *buf, size_t count);
+
 char *get_next_line(int fd)
 {
     
     static int BUFFER_SIZE;
-    char str[273];
+    char str[279];
     int rd;
 
-    BUFFER_SIZE = 273;
+    BUFFER_SIZE = 273;    
 
     while(1)
     {
-        rd = read(fd, str, sizeof(str));
+        
+        rd = read(fd, str, BUFFER_SIZE);
         if (rd <= 0)
             break;
 
     }
-    str[273] = '\0';
+    str[273] = '\0'; //essencial para evitar criar caracteres adicionais no final
 
     printf("\n%s\n", str);
 
-    return (str);
+    return (rd);
 }
 
 int main()
@@ -48,10 +51,7 @@ int main()
         printf("ERROR FILE!\n");
         return (0);
     }
-
-    get_next_line(fd);
-
-    
+    get_next_line(fd);   
 
     return (0);
 }
