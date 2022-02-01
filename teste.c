@@ -12,6 +12,46 @@
 
 #include "get_next_line.h"
 
+char *line_info(char *line)
+{
+    int i;
+    int j;
+    int k;
+    int m;
+
+    i = 0;
+    j = 0;
+    k = 0;
+    m = 0;
+    
+    while (line[i] != '\0')
+    {
+        if (line[i] == '\n') //numero de linhas
+            k++;
+        else
+        {
+            printf("--Tamanho da string: %ld", ft_strlen(line));
+            break;
+        }
+
+        while(line[j] != '\n') // bytes ate a quebra de linha
+            j++;
+        
+        if((line[i] == '\r') && (line[i + 1] == '\n') && (line[i + 2] == '\r') && (line[i + 3] == '\n'))
+            m++;      
+        i++; //numero total de bytes
+    }
+
+        printf("\n--Numero total de bytes: %d\n", i);
+        printf("--bytes ate quebra de linha: %d\n", j - 1);
+        printf("--Numero de linhas totais: %d\n", k + 1);
+        printf("--Numero de linhas em branco: %d\n", m);
+        //printf("\nBUFFER: \n%s\nBUFFER\n", buf);
+
+    
+    return(line);
+}
+
 int main()
 {
     int fd;   

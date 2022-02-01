@@ -11,9 +11,10 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include "get_next_line_utils.c"
 #include <sys/fcntl.h>
 
-# define BUFFER_SIZE 23
+# define BUFFER_SIZE 75
 
 /* \n is for unix
 \r is for mac (before OS X)
@@ -30,57 +31,31 @@ The sort of shit that it demanded.\r\n
 \r\n 
  by Ernest Hemingway." */
 
-char *line_info(char *line)
+
+
+char *read_line(char *line)
 {
     int i;
-    int j;
-    int k;
-    int m;
+    char *tmp;
 
     i = 0;
-    j = 0;
-    k = 0;
-    m = 0;
+
     
-    while (line[i] != '\0')
+    if(strchr(line, '\n'))
     {
-        if (line[i] == '\n') //numero de linhas
-            k++;
-        else
+        tmp = malloc(sizeof(char) * (29 + 1));
+        while(line[i] != '\n')
         {
-            printf("--Tamanho da string: %ld", ft_strlen(line));
-            break;
+          tmp[i] = line[i];
+          i++;   
         }
-
-        while(line[j] != '\n') // bytes ate a quebra de linha
-            j++;
-        
-        if((line[i] == '\r') && (line[i + 1] == '\n') && (line[i + 2] == '\r') && (line[i + 3] == '\n'))
-            m++;      
-        i++; //numero total de bytes
+        tmp[i] = '\0';
     }
-
-        printf("\n--Numero total de bytes: %d\n", i);
-        printf("--bytes ate quebra de linha: %d\n", j - 1);
-        printf("--Numero de linhas totais: %d\n", k + 1);
-        printf("--Numero de linhas em branco: %d\n", m);
-        //printf("\nBUFFER: \n%s\nBUFFER\n", buf);
-
     
-    return(line);
+
+    return tmp;
+
 }
-
-/* char *read_line(char *line)
-{
-    int i;
-
-    i = 0;
-    while (line[i] != '\n')
-    {
-
-    }
-
-} */
 
 char *get_next_line(int fd)
 {
@@ -88,26 +63,45 @@ char *get_next_line(int fd)
    static char buf[BUFFER_SIZE];
    int read_size;
 
-    // (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1)); // sem memoria alocada da seg fault no final
+    // (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1)); // sem memoria alocada da seg fault no final 
 
-   read_size = read(fd, buf, BUFFER_SIZE);
+    read_size = read(fd, buf, BUFFER_SIZE);
 
-   line = buf;
+    line = buf;
+    
+    read_line(line);  
 
-   printf("Check line less than line: %s\n", line);
-
-   line_info(line);
-
-   return (line);
+    //line_info(line);
+    
+    return (read_line(line));
 }
 
-int main()
+int	main()
+{
+	int	fd;
+
+	fd = open("The_Age_demanded.txt", O_RDONLY);
+	if (fd < 3 && fd != 0)
+		return (-1);
+	printf("FD: %d\n", fd);
+	printf("1: %s", get_next_line(fd));
+	printf("2: %s", get_next_line(fd));
+	printf("3: %s", get_next_line(fd));
+	printf("4: %s", get_next_line(fd));
+	printf("5: %s", get_next_line(fd));
+	printf("6: %s", get_next_line(fd));
+	return (0);
+}
+
+/* int main()
 {
     int fd;
+    int i = 0;
 
     fd = open("The_Age_demanded.txt", O_RDONLY);
 
+    while(i++ < 1)
     printf("\n%s\n\n", get_next_line(fd));
 
     return (0);
-}
+} */
