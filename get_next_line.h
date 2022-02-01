@@ -11,13 +11,14 @@
 /* ************************************************************************** */
 
 
-/* #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 29
-#endif  */
+
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 29
+#endif 
 
 
 #include <unistd.h>
@@ -28,6 +29,10 @@
 #include <sys/stat.h>
 #include <string.h>
 
-size_t	ft_strlen(const char *s);
+
+//get_next_line_utils.c
+char *ft_strchr(const char *s, int c);
+char *ft_strjoin(char const *s1, char const *s2);
+char *ft_substr(char const *s, unsigned int start, size_t len);
 
 #endif
