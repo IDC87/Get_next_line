@@ -6,53 +6,82 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/01/03 20:23:53 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/02/07 21:16:26 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
+
+# define BUFFER_SIZE 10
+
+/* Duvidas:
+- porque o static variable passa para a outra funcao como double pointer */
+
+ /* OBJECTIVOS:
+1- Se chega ao fim do \n 
+2- se e EOF, neste caso se o read retornar 0
+
+ - Se line = NULL (vazia), entao envia o que esta no buf 
+ - Se line ocupada, entao strjoin */
+
+char *read_line(char **line, char *buf, int fd)
+{
+    int byte_read;
+    
+    byte_read = read(fd, buf, BUFFER_SIZE);
+
+    *line = "esta e uma mensagem de teste";
+    
+
+    printf("\n%s\n", *line);
+
+    return *line;
+    
+    
+}
+
 char *get_next_line(int fd)
 {
+    static char *line;
+    char *buf;    
+
+    if (fd < 0 || BUFFER_SIZE <= 0)
+        return (NULL);    
+    buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+    if (!buf)
+        return (NULL);   
+
+    read_line(&line, buf, fd);
+    
+    
+
+    return "teste";
 
 }
 
-//Syntax in C language 
-size_t read (int fd, void* buf, size_t cnt);  
+int	main()
+{
+	int	fd;
 
-Parameters:
+	fd = open("The_Age_demanded.txt", O_RDONLY);
+	if (fd < 3 && fd != 0)
+		return (-1);
+	printf("FD: %d\n", fd);
+	printf("1: %s", get_next_line(fd));
+	/* printf("2: %s", get_next_line(fd));
+	printf("3: %s", get_next_line(fd));
+	printf("4: %s", get_next_line(fd));
+	printf("5: %s", get_next_line(fd));
+	printf("6: %s", get_next_line(fd)); */
+	return (0);
+}
 
-    fd: file descriptor
-    buf: buffer to read data from
-    cnt: length of buffer
-
-Returns: How many bytes were actually read
-
-    return Number of bytes read on success
-    return 0 on reaching end of file
-    return -1 on error
-    return -1 on signal interrupt
-
-Important points
-
-    buf needs to point to a valid memory location with length not smaller than the specified size because of overflow.
-    fd should be a valid file descriptor returned from open() to perform read operation because if fd is NULL then read should generate error.
-    cnt is the requested number of bytes read, while the return value is the actual number of bytes read. Also, some times read system call should read less bytes than cnt.
-
-    // C program to illustrate 
-// read system Call 
-#include<stdio.h> 
-#include <fcntl.h> 
-
-int main() 
-{ 
-int fd, sz; 
-char *c = (char *) calloc(100, sizeof(char)); 
-  
-fd = open("foo.txt", O_RDONLY); 
-if (fd < 0) { perror("r1"); exit(1); } 
-  
-sz = read(fd, c, 10); 
-printf("called read(% d, c, 10). returned that"
-        " %d bytes were read.\n", fd, sz); 
-c[sz] = '\0'; 
-printf("Those bytes are as follows: % s\n", c); 
-} 
+/* int main()
+{
+    int fd;
+    int i = 0;
+    fd = open("The_Age_demanded.txt", O_RDONLY);
+    while(i++ < 1)
+    printf("\n%s\n\n", get_next_line(fd));
+    return (0);
+} */
