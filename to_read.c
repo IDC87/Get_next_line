@@ -33,17 +33,18 @@ The sort of shit that it demanded.\r\n
 
 
 
-char *read_line(char *line)
+char *read_line(char *line, char **buf)
 {
     int i;
     char *tmp;
 
     i = 0;
 
+    printf("\n\n\n1: %s\n\n\n\n", *buf);
     
     if(strchr(line, '\n'))
     {
-        tmp = malloc(sizeof(char) * (29 + 1));
+        tmp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
         while(line[i] != '\n')
         {
           tmp[i] = line[i];
@@ -51,17 +52,16 @@ char *read_line(char *line)
         }
         tmp[i] = '\0';
     }
-    
-
     return tmp;
-
 }
 
 char *get_next_line(int fd)
 {
     char *line;
-   static char buf[BUFFER_SIZE];
+   //static char buf[BUFFER_SIZE]; disseram me que era para fazer assim mas tvz com pointer e mais facil
+   static char *buf;
    int read_size;
+   char *final;
 
     // (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1)); // sem memoria alocada da seg fault no final 
 
@@ -69,14 +69,14 @@ char *get_next_line(int fd)
 
     line = buf;
     
-    read_line(line);  
+    final = read_line(line, *buf);  
 
     //line_info(line);
     
-    return (read_line(line));
+    return (final);
 }
 
-int	main()
+/* int	main()
 {
 	int	fd;
 
@@ -89,11 +89,11 @@ int	main()
 	printf("3: %s", get_next_line(fd));
 	printf("4: %s", get_next_line(fd));
 	printf("5: %s", get_next_line(fd));
-	printf("6: %s", get_next_line(fd));
+	printf("6: %s", get_next_line(fd)); 
 	return (0);
-}
+} */
 
-/* int main()
+int main()
 {
     int fd;
     int i = 0;
@@ -104,4 +104,4 @@ int	main()
     printf("\n%s\n\n", get_next_line(fd));
 
     return (0);
-} */
+}
