@@ -6,7 +6,7 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/02/07 23:23:32 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/02/08 22:10:44 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,44 +26,50 @@
  - Se line = NULL (vazia), entao envia o que esta no buf 
  - Se line ocupada, entao strjoin */
 
-char *read_line(char **line, char *buf, int fd)
+void read_line(char **line, char *buf, int fd)
 {
     int byte_read;
+    int i;
     char *tmp;
-    char *tmp2;
-    char *final;
-    
-    byte_read = read(fd, buf, BUFFER_SIZE);
 
-    printf("\nfirst buffer: %s\n", buf);
-    
-        tmp = malloc(sizeof(char) * byte_read);
+    i = 0;
+
+    if(!*line)
+    {         
+        byte_read = read(fd, buf, BUFFER_SIZE);
+        if(!ft_strchr(buf, '\n'))
         tmp = buf;    
+    }
+    while (i < byte_read)
+    {
+        printf("%c\n", tmp[i]);
+        i++;
+    }
 
     byte_read = read(fd, buf, BUFFER_SIZE);
 
-    printf("\nsecond buffer: %s\n", buf);
+    tmp = ft_strjoin(tmp, buf);
 
-        tmp2 = malloc(sizeof(char) * byte_read);
-        tmp2 = buf;
-        *line = ft_strjoin(tmp, tmp2);
+    while (i < byte_read)
+    {
+        printf("%c\n", tmp[i]);
+        i++;
+    }
+
+
+
+
     
 
-    /* printf("\nfirst: %s", tmp);
-    printf("\nsecond: %s\n", buf); */
-
-    printf("\nfinal: %s\n", final);
-    
-
-    return *line;
-    
-    
+    //*line = buf;     
+    //return tmp;
 }
 
 char *get_next_line(int fd)
 {
     static char *line;
-    char *buf;    
+    char *buf;   
+    int byte_read; 
 
     if (fd < 0 || BUFFER_SIZE <= 0)
         return (NULL);    
@@ -72,6 +78,7 @@ char *get_next_line(int fd)
         return (NULL);   
 
      read_line(&line, buf, fd);
+
     
     
 
@@ -88,8 +95,8 @@ int	main()
 		return (-1);
 	printf("FD: %d\n", fd);
 	printf("1: %s", get_next_line(fd));
-	/* printf("2: %s", get_next_line(fd));
-	printf("3: %s", get_next_line(fd));
+	//printf("2: %s", get_next_line(fd));
+	/* printf("3: %s", get_next_line(fd));
 	printf("4: %s", get_next_line(fd));
 	printf("5: %s", get_next_line(fd));
 	printf("6: %s", get_next_line(fd)); */
