@@ -6,7 +6,7 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/02/08 22:10:44 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/02/08 22:11:36 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,7 @@ void read_line(char **line, char *buf, int fd)
         i++;
     }
 
-    byte_read = read(fd, buf, BUFFER_SIZE);
-
-    tmp = ft_strjoin(tmp, buf);
-
-    while (i < byte_read)
-    {
-        printf("%c\n", tmp[i]);
-        i++;
-    }
+   
 
 
 
