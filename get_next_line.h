@@ -21,6 +21,7 @@
 #endif  */
 
 
+#include <sys/_types/_size_t.h>
 #include <unistd.h>
 #include<stdio.h> 
 #include <fcntl.h>              //>>>>>>>>>>APAGAR O QUE NAO INTERESSA<<<<<<<<<<<
@@ -31,6 +32,7 @@
 
 
 //get_next_line_utils.c
+size_t	ft_strlen(const char *s);
 char *ft_strchr(const char *s, int c);
 char *ft_strjoin(char const *s1, char const *s2);
 char *ft_substr(char const *s, unsigned int start, size_t len);
