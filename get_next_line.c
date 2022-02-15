@@ -6,7 +6,7 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/02/15 00:30:38 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/02/15 22:32:09 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,59 +26,62 @@
 
  - Se line = NULL (vazia), entao envia o que esta no buf 
  - Se line ocupada, entao strjoin */
-int search_cond(char *buf)
-{
-    int i;
 
-    i = 0;
-    if (!ft_strchr(buf, '\n'))
-    return 1;
-    else
-    return 2;
-    
-}
+
+ /* \n is for unix
+\r is for mac (before OS X)
+\r\n is for windows format */
+
+
+/* ^M Char explanation:
+Unix uses 0xA for a newline character. 
+Windows uses a combination of two characters: 0xD 0xA. 0xD is the carriage return character. 
+^M happens to be the way vim displays 0xD (0x0D = 13, M is the 13th letter in the English alphabet).
+
+You can remove all the ^M characters by running the following:
+
+:%s/^M//g
+
+Where ^M is entered by holding down Ctrl and typing v followed by m, and then releasing Ctrl. 
+This is sometimes abbreviated as ^V^M, but note that you must enter it as described in the previous sentence, 
+rather than typing it out literally.
+This expression will replace all occurrences of ^M with the empty string (i.e. nothing). 
+I use this to get rid of ^M in files copied from Windows to Unix (Solaris, Linux, OSX). */
+
+
 
 void read_line(char **line, char *buf, int fd, int byte_read)
 {
-    int i;
     int j;
     char *tmp;
 
-    i = 0;
     j = 0;
 
-    if(!*line)
-    {         
-        byte_read = read(fd, buf, BUFFER_SIZE);
-        //printf("\n%d\n", byte_read);
-        if(!ft_strchr(buf, '\n'))
-        {            
-            *line = ft_substr(buf, 0, byte_read);
+     if(!*line) // ultima edicao
+    { 
+           *line = ft_substr(buf, 0, byte_read);
             while (1) // corrigir 
-            {                
+            { 
                 byte_read = read(fd, buf, BUFFER_SIZE);
                 if(!ft_strchr(buf, '\n'))                                 
                     *line = ft_strjoin(*line, buf);
                 else             
                 {
-                    tmp = (char *)malloc(sizeof(char) * (byte_read)); // corrigir
-                     printf("BYTE read: %d", byte_read);
+                    tmp = (char *)malloc(sizeof(char) * (byte_read + 1)); // corrigir
                     while (j < byte_read) // corrigir
                     {  
-                         tmp[j] = buf[j];                 
-                        if (tmp[j] == '\n')                       
-                           tmp[j - 1] = '\0';          
-                        j++;
+                        if (buf[j] != '\n')
+                        tmp[j] = buf[j];
+                        else                        
+                            break;
+                         j++;
                     }
-                    *line = ft_strjoin(*line, tmp); 
+                    *line = ft_strjoin(*line, tmp);                    
                     break;               
                 }
-                i++;
-            }
-        }        
+            }                
     }
-    free(tmp);  
-    printf("\niteracoes do while %d", i);  
+    free(tmp);
 }
 
 char *get_next_line(int fd)
@@ -93,24 +96,27 @@ char *get_next_line(int fd)
     if (!buf)
         return (NULL);       
 
-     read_line(&line, buf, fd, byte_read);     
+     read_line(&line, buf, fd, byte_read);    
 
-     printf("\n%ld\n", ft_strlen(line));    
 
-     buf = line;
 
-    return buf;
+     //printf("\n*line len: %ld\n", ft_strlen(line));    
+
+     
+
+    return line;
 }
 
 int	main()
 {
 	int	fd;
-	//fd = open("The_age_demanded.txt", O_RDONLY);
-    fd = open("teste.txt", O_RDONLY);
+	//fd = open("The_Age_demanded.txt", O_RDONLY);
+    //fd = open("teste.txt", O_RDONLY);
+    fd = open("The_new_text.txt", O_RDONLY);
 	if (fd < 3 && fd != 0)
 		return (-1);
 	//printf("FD: %d\n", fd);
-	printf("\n1: %s\n", get_next_line(fd));
+	printf("1:%s", get_next_line(fd));
 	//printf("2: %s", get_next_line(fd));
 	/* printf("3: %s", get_next_line(fd));
 	printf("4: %s", get_next_line(fd));

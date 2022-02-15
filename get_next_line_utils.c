@@ -6,7 +6,7 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:15:39 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/02/13 22:46:36 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/02/15 21:16:23 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (0);
 	i = 0;
 	j = 0;
-	str = (char *)malloc(sizeof(*s1) * (ft_strlen(s1) + ft_strlen(s2)));
+	str = (char *)malloc(sizeof(*s1) * ((ft_strlen(s1) + ft_strlen(s2)) + 1));
 	if (str == NULL)
 		return (NULL);
 	while (i < ft_strlen(s1))
