@@ -21,7 +21,6 @@
 #endif  */
 
 
-#include <sys/_types/_size_t.h>
 #include <unistd.h>
 #include<stdio.h> 
 #include <fcntl.h>              //>>>>>>>>>>APAGAR O QUE NAO INTERESSA<<<<<<<<<<<
