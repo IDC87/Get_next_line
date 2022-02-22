@@ -6,11 +6,12 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/02/17 00:24:49 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/02/22 23:26:42 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdlib.h>
 
 /* Duvidas:
 - DONE!!!porque o static variable passa para a outra funcao como double pointer */
@@ -18,6 +19,7 @@
  /* OBJECTIVOS:
 1- Se chega ao fim do \n 
 2- se e EOF, neste caso se o read retornar 0
+3 - modelo com linha vazia nao funciona, arranjar
 
  - Se line = NULL (vazia), entao envia o que esta no buf 
  - Se line ocupada, entao strjoin */
@@ -44,8 +46,17 @@ This expression will replace all occurrences of ^M with the empty string (i.e. n
 I use this to get rid of ^M in files copied from Windows to Unix (Solaris, Linux, OSX). */
 
 //# define BUFFER_SIZE 2 >>>>>>IMPORTANTE!!!!
+void line_carrier(char **line, char *carrier)
+{
+    
+    *line = ft_substr(carrier, 0, ft_strlen(carrier));
+    
+    //printf("\nCARRIER: %s\n", *line);
+    
 
-void read_line(char **line, char *buf, int fd, int byte_read, int BUFFER_SIZE) // tirar o BUFFER_SIZE
+}
+
+char *read_line(char **line, char *buf, int fd, int byte_read, int BUFFER_SIZE) // tirar o BUFFER_SIZE
 {
     int j;
     int i;
@@ -56,13 +67,14 @@ void read_line(char **line, char *buf, int fd, int byte_read, int BUFFER_SIZE) /
     j = 0;
     i = 0;
     line_stopper = 1;
+    //byte_read = 1;
 
-     if(!*line) // ultima edicao
-    { 
-           *line = ft_substr(buf, 0, byte_read);
+      //if(!*line) ultima edicao
+        if(!*line)
+        *line = ft_substr(buf, 0, byte_read); // tvz usar aqui o malloc em vez da substr
             while (1) // corrigir 
-            { 
-                byte_read = read(fd, buf, BUFFER_SIZE);
+            {                
+                byte_read = read(fd, buf, BUFFER_SIZE);                
                 if(!ft_strchr(buf, '\n'))                                 
                     *line = ft_strjoin(*line, buf);
                 else             
@@ -75,26 +87,26 @@ void read_line(char **line, char *buf, int fd, int byte_read, int BUFFER_SIZE) /
                         tmp[j] = buf[j];
                         else
                         {
-                            if(buf[j] == '\n')
+                            while(buf[j] == '\n') // isto se calhar puxar para o inicio " enquanto for \n continua a andar"
                                 j++;
                             line_stopper = 0;                    
                             carrier[i] = buf[j];
                             i++;
                         }
-                         j++;
-                         
+                         j++;                         
                     }
                     *line = ft_strjoin(*line, tmp); 
-                    free(tmp);
-                    free(carrier);                   
+                    free(tmp);                    
+                    //free(carrier);                   
                     break;               
                 }
-            }                
-    }
+            }
     
+    return (carrier);
     
-   
 }
+
+
 char *get_next_line(int fd, int BUFFER_SIZE) //tirar o BUFFER_SIZE
 {
     static char *line;
@@ -102,6 +114,7 @@ char *get_next_line(int fd, int BUFFER_SIZE) //tirar o BUFFER_SIZE
     char *result = NULL;
     int i;
     int byte_read; 
+    char *attach;
 
     i = 0;
 
@@ -111,14 +124,31 @@ char *get_next_line(int fd, int BUFFER_SIZE) //tirar o BUFFER_SIZE
     if (!buf)
         return (NULL);  
     
-     read_line(&line, buf, fd, byte_read, BUFFER_SIZE);   // tirar o BUFFER_SIZE 
-     //printf("\n*line len: %ld\n", ft_strlen(line));  
-     result = (char *)malloc(sizeof(char) * (ft_strlen(line) + 1));
-     //free(buf);
-      
+     attach = read_line(&line, buf, fd, byte_read, BUFFER_SIZE);   // tirar o BUFFER_SIZE 
+     result = (char *)malloc(sizeof(char) * (ft_strlen(line) + 1));      
      result = line; 
-     line = NULL;
+     line_carrier(&line, attach);
+   
     return result;
+}
+
+int main()
+{
+    int fd;
+    int BUFFER_SIZE;
+    int i = 0;
+    BUFFER_SIZE = 2;
+    //fd = open("The_Age_demanded.txt", O_RDONLY);
+    fd = open("teste.txt", O_RDONLY);
+    //fd = open("The_new_text.txt", O_RDONLY);
+    while(i < 20)
+    {
+        //printf("BUFFER_SIZE: %d", BUFFER_SIZE);
+        printf("%s\n", get_next_line(fd, BUFFER_SIZE));
+        i++;
+    }
+    
+    return (0);
 }
 
 /* int	main()
@@ -139,20 +169,3 @@ char *get_next_line(int fd, int BUFFER_SIZE) //tirar o BUFFER_SIZE
 	return (0);
 } */
 
-int main()
-{
-    int fd;
-    int BUFFER_SIZE;
-    int i = 0;
-    BUFFER_SIZE = 2;
-    //fd = open("The_Age_demanded.txt", O_RDONLY);
-    //fd = open("teste.txt", O_RDONLY);
-    fd = open("The_new_text.txt", O_RDONLY);
-    while(i++ < 4)
-    {
-        printf("BUFFER_SIZE: %d", BUFFER_SIZE);
-        printf("\n%s\n\n", get_next_line(fd, BUFFER_SIZE));
-    }
-    
-    return (0);
-}
