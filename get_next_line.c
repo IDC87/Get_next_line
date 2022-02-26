@@ -6,7 +6,7 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/02/22 23:26:42 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/02/26 11:44:48 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ char *read_line(char **line, char *buf, int fd, int byte_read, int BUFFER_SIZE) 
     int line_stopper;
     char *tmp;
     char *carrier;
+    char *eof_tester;
 
     j = 0;
     i = 0;
@@ -71,10 +72,14 @@ char *read_line(char **line, char *buf, int fd, int byte_read, int BUFFER_SIZE) 
 
       //if(!*line) ultima edicao
         if(!*line)
-        *line = ft_substr(buf, 0, byte_read); // tvz usar aqui o malloc em vez da substr
-            while (1) // corrigir 
+            *line = (char *)malloc(sizeof(char) *(byte_read + 1)); //antes estava a usar a substr
+        
+        while (byte_read != 0) // corrigir 
             {                
-                byte_read = read(fd, buf, BUFFER_SIZE);                
+                byte_read = read(fd, buf, BUFFER_SIZE);
+                if(byte_read == 0)
+                continue;
+                //printf("\n-----\nBUF:\"%s\"\n-----\n", buf);                
                 if(!ft_strchr(buf, '\n'))                                 
                     *line = ft_strjoin(*line, buf);
                 else             
@@ -101,6 +106,15 @@ char *read_line(char **line, char *buf, int fd, int byte_read, int BUFFER_SIZE) 
                     break;               
                 }
             }
+        
+        if (byte_read == 0)
+        {
+            eof_tester = malloc(BUFFER_SIZE + 1);
+            eof_tester = buf;
+            //printf("EOF IS:\"%s\"\n", eof_tester);
+            
+        }
+        
     
     return (carrier);
     
@@ -117,6 +131,7 @@ char *get_next_line(int fd, int BUFFER_SIZE) //tirar o BUFFER_SIZE
     char *attach;
 
     i = 0;
+    byte_read = 1;
 
     if (fd < 0 || BUFFER_SIZE <= 0)
         return (NULL);    
@@ -132,16 +147,23 @@ char *get_next_line(int fd, int BUFFER_SIZE) //tirar o BUFFER_SIZE
     return result;
 }
 
+/* BUGS A CORRIGIR:
+
+- chegar a EOF
+- linhas vazias nao as salta como deve ser
+- ciclo maior que o texto cria garbage value
+- buffer maior que linhas  */
+
 int main()
 {
     int fd;
     int BUFFER_SIZE;
     int i = 0;
-    BUFFER_SIZE = 2;
+    BUFFER_SIZE = 18;
     //fd = open("The_Age_demanded.txt", O_RDONLY);
-    fd = open("teste.txt", O_RDONLY);
-    //fd = open("The_new_text.txt", O_RDONLY);
-    while(i < 20)
+    //fd = open("teste.txt", O_RDONLY);
+    fd = open("The_new_text.txt", O_RDONLY);
+    while(i < 9)
     {
         //printf("BUFFER_SIZE: %d", BUFFER_SIZE);
         printf("%s\n", get_next_line(fd, BUFFER_SIZE));
