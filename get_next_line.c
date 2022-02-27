@@ -6,7 +6,7 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/02/26 11:44:48 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/02/26 15:28:30 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,13 @@ This expression will replace all occurrences of ^M with the empty string (i.e. n
 I use this to get rid of ^M in files copied from Windows to Unix (Solaris, Linux, OSX). */
 
 //# define BUFFER_SIZE 2 >>>>>>IMPORTANTE!!!!
-void line_carrier(char **line, char *carrier)
+
+
+char *line_carrier(char **line, char *carrier)
 {
     
     *line = ft_substr(carrier, 0, ft_strlen(carrier));
+    
     
     //printf("\nCARRIER: %s\n", *line);
     
@@ -74,11 +77,13 @@ char *read_line(char **line, char *buf, int fd, int byte_read, int BUFFER_SIZE) 
         if(!*line)
             *line = (char *)malloc(sizeof(char) *(byte_read + 1)); //antes estava a usar a substr
         
+        
         while (byte_read != 0) // corrigir 
             {                
                 byte_read = read(fd, buf, BUFFER_SIZE);
-                if(byte_read == 0)
-                continue;
+                
+                /* if(byte_read == 0)
+                continue; */
                 //printf("\n-----\nBUF:\"%s\"\n-----\n", buf);                
                 if(!ft_strchr(buf, '\n'))                                 
                     *line = ft_strjoin(*line, buf);
@@ -101,31 +106,25 @@ char *read_line(char **line, char *buf, int fd, int byte_read, int BUFFER_SIZE) 
                          j++;                         
                     }
                     *line = ft_strjoin(*line, tmp); 
+
                     free(tmp);                    
-                    //free(carrier);                   
-                    break;               
+                    //free(carrier);                  
+                    break;   
+                               
                 }
-            }
+            }     
         
-        if (byte_read == 0)
-        {
-            eof_tester = malloc(BUFFER_SIZE + 1);
-            eof_tester = buf;
             //printf("EOF IS:\"%s\"\n", eof_tester);
-            
-        }
-        
-    
+ 
     return (carrier);
     
 }
-
 
 char *get_next_line(int fd, int BUFFER_SIZE) //tirar o BUFFER_SIZE
 {
     static char *line;
     char *buf;   
-    char *result = NULL;
+    char *result;
     int i;
     int byte_read; 
     char *attach;
@@ -142,7 +141,9 @@ char *get_next_line(int fd, int BUFFER_SIZE) //tirar o BUFFER_SIZE
      attach = read_line(&line, buf, fd, byte_read, BUFFER_SIZE);   // tirar o BUFFER_SIZE 
      result = (char *)malloc(sizeof(char) * (ft_strlen(line) + 1));      
      result = line; 
-     line_carrier(&line, attach);
+     
+     
+      line_carrier(&line, attach);
    
     return result;
 }
@@ -159,14 +160,14 @@ int main()
     int fd;
     int BUFFER_SIZE;
     int i = 0;
-    BUFFER_SIZE = 18;
+    BUFFER_SIZE = 3;
     //fd = open("The_Age_demanded.txt", O_RDONLY);
     //fd = open("teste.txt", O_RDONLY);
     fd = open("The_new_text.txt", O_RDONLY);
-    while(i < 9)
+    while(i < 2)
     {
         //printf("BUFFER_SIZE: %d", BUFFER_SIZE);
-        printf("%s\n", get_next_line(fd, BUFFER_SIZE));
+        printf("%s", get_next_line(fd, BUFFER_SIZE));
         i++;
     }
     
