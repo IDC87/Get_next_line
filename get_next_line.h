@@ -22,13 +22,9 @@
 
 
 #include <unistd.h>
-#include<stdio.h> 
-#include <fcntl.h>              //>>>>>>>>>>APAGAR O QUE NAO INTERESSA<<<<<<<<<<<
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <string.h>
 
+char *get_next_line(int fd);
 
 //get_next_line_utils.c
 size_t	ft_strlen(const char *s);
