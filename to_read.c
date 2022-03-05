@@ -94,7 +94,7 @@ int main()
     //fd = open("The_Age_demanded.txt", O_RDONLY);
     fd = open("teste.txt", O_RDONLY);
     //fd = open("The_new_text.txt", O_RDONLY);
-    while(i < 2)
+    while(i < 8)
     {
         //printf("BUFFER_SIZE: %d", BUFFER_SIZE);
         printf("%s", get_next_line(fd));
