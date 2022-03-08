@@ -6,11 +6,13 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/03/05 18:16:28 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/03/08 22:11:21 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+
 
 char *print_line_aux(char *result, char *tmp) 
 {
@@ -18,6 +20,8 @@ char *print_line_aux(char *result, char *tmp)
     int i;
 
     i = 0;
+    if (!result || !tmp)
+        return NULL;   
     while(tmp[i] != '\n')
     {
         result[i] = tmp[i];
@@ -35,6 +39,8 @@ char *print_line_carrier(char *result, char *tmp)
     int len;
 
     i = 0;
+    if (!result || !tmp)
+        return NULL;   
     len = ft_strlen(result);
     while (tmp[len + i]) 
     {
@@ -49,53 +55,60 @@ char *print_line(char **line)
 {
     char *tmp;
     char *result;
+    int line_len;
     
     if(!*line)
         return NULL;
-    tmp = ft_strdup(*line);
-    result = (char *)malloc(sizeof(char *) * ft_strlen(tmp)); 
-    if (!ft_strchr(tmp, '\n')) // a ultima linha
+     line_len = ft_strlen(*line);   
+    if (!ft_strchr(*line, '\n')) // a ultima linha
     {
-        result = ft_substr(*line, 0, ft_strlen(*line));
+        result = ft_substr(*line, 0, line_len);
         free(*line); 
         *line = NULL;   
         return (result);
     }
+    result = ft_substr(*line, 0, line_len);    
+    tmp = ft_substr(*line, 0, line_len); 
     result = print_line_aux(result, tmp);
-    tmp = print_line_carrier(result, tmp);
-    *line = tmp;
-    //free(tmp); //dar free aqui causa erros na apresentacao das linhas
+    *line = print_line_carrier(result, tmp);
+    
     return (result);
 }
 
 void read_line(char **line, char *buf, int fd) 
 {
     int byte_read;
+    char *tmp;
 
     if (!*line || !ft_strchr(buf, '\n')) // caso nao encontre o \n
     {
         byte_read = read(fd, buf, BUFFER_SIZE);
+        if(byte_read == -1)
+            free(buf);
         while(byte_read != 0)
         { 
             buf[byte_read] = '\0';
             if (!*line)
-                *line = ft_substr(buf, 0, byte_read);
+                *line = ft_substr(buf, 0, byte_read);              
             else 
-            *line = ft_strjoin(*line, buf);
+            {
+                tmp = *line;
+                *line = ft_strjoin(*line, buf);
+                free(tmp);
+            }            
                 if(ft_strchr(buf, '\n'))
-                break;
+                    break;
             byte_read = read(fd, buf, BUFFER_SIZE);
-
         }
-    }
-    free(buf); //dar free aqui faz o numero de linhas nao ser apresentado corretamente
+    }   
+    free(buf); 
+    buf[0] = '\0';
 }
 
 char *get_next_line(int fd) 
 {
     static char *line;
     char *buf;   
-    char *result;
     
     buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
     if (!buf)
@@ -106,8 +119,8 @@ char *get_next_line(int fd)
         return (NULL);
     }    
     read_line(&line, buf, fd);
-    result = print_line(&line);
-    return(result);
+    
+    return(print_line(&line));
 }
 
 /* int main()
@@ -118,7 +131,7 @@ char *get_next_line(int fd)
     fd = open("notas.txt", O_RDONLY);
     //fd = open("teste.txt", O_RDONLY);
     //fd = open("The_new_text.txt", O_RDONLY);
-    while(i < 30)
+    while(i < 25)
     {
         //printf("BUFFER_SIZE: %d", BUFFER_SIZE);
         printf("%s", get_next_line(fd));

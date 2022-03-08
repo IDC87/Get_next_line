@@ -6,7 +6,7 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/27 17:15:39 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/02/26 16:54:28 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/03/08 21:46:36 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,85 +24,48 @@ size_t	ft_strlen(const char *s)
 
 char	*ft_strchr(const char *s, int c)
 {
-	int	i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == (char)c)
-			return ((char *)s + i);
-		i++;
-	}
-	if (c == '\0')
-		return ((char *)s + i);
-	return (NULL);
+	while (*s != (unsigned char)c)
+		if (!*s++)
+			return (0);
+	return ((char *)s);
 }
+
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
+	char	*ret;
+	char	*tmp;
 	size_t	i;
-	char	*str;
 
-	if (!s)
-		return (NULL);
+	ret = malloc(sizeof(char) * (len + 1));
+	if (!ret)
+		return (0);
+	tmp = (char *)s + start;
 	i = 0;
-	if (len > ft_strlen(s))
-		len = ft_strlen(s);
-	str = (char *)malloc(sizeof(char) * (len + 1));
-	if (str == NULL)
-		return (NULL);
-	while (i < len && start < ft_strlen(s) + 1)
-	{
-		str[i] = s[start];
-		start++;
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
+	while (*tmp && i < len)
+		ret[i++] = *tmp++;
+	ret[i] = 0;
+	return (ret);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	size_t	i;
-	size_t	j;
-	char	*str;
+	{
+	int		i;
+	char	*ret;
+	size_t	len;
 
-	if (!(s1) || !(s2))
+	len = ft_strlen(s1) + ft_strlen(s2);
+	ret = malloc(sizeof(char) * (len + 1));
+	if (!ret)
 		return (0);
 	i = 0;
-	j = 0;
-	str = (char *)malloc(sizeof(*s1) * ((ft_strlen(s1) + ft_strlen(s2)) + 1));
-	if (str == NULL)
-		return (NULL);
-	while (i < ft_strlen(s1))
-	{
-		str[i] = s1[i];
-		i++;
+	while (*s1)
+		ret[i++] = *s1++;
+	while (*s2)
+		ret[i++] = *s2++;
+	ret[i] = 0;
+	return (ret);
 	}
-	while (j < ft_strlen(s2))
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	return (str);
 }
 
-char	*ft_strdup(const char *s)
-{
-	int		i;
-	char	*str;
-
-	str = NULL;
-	i = 0;
-	str = (char *)malloc(sizeof(*s) * ft_strlen(s) + 1);
-	if (str == NULL)
-		return (NULL);
-	while (s[i] != '\0')
-	{
-		str[i] = s[i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
