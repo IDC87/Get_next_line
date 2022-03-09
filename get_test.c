@@ -80,7 +80,7 @@ char    *get_next_line(int fd)
     while (isline == 1)
     {
         read_size = 1;
-        if (!buffer)
+        if (buffer[0] == 0)
             read_size = read(fd , buffer, BUFFER_SIZE);
         if (read_size <= 0)
             return (line);

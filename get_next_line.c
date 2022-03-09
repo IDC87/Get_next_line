@@ -6,15 +6,14 @@
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/03/08 22:11:21 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/03/09 23:13:16 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
-
-
-char *print_line_aux(char *result, char *tmp) 
+/* char *print_line_aux(char *result, char *tmp) 
 {
     // funcao que retorna o * ate a quebra de linha
     int i;
@@ -51,77 +50,103 @@ char *print_line_carrier(char *result, char *tmp)
     return (tmp);
 }
 
-char *print_line(char **line)
+char *print_line(char *rest)
 {
     char *tmp;
     char *result;
+    
     int line_len;
     
-    if(!*line)
+    if(!rest)
         return NULL;
-     line_len = ft_strlen(*line);   
-    if (!ft_strchr(*line, '\n')) // a ultima linha
+        
+    if (!ft_strchr(rest, '\n')) // a ultima linha
     {
-        result = ft_substr(*line, 0, line_len);
-        free(*line); 
-        *line = NULL;   
+        result = ft_substr(rest, 0, line_len);
+        free(rest); 
+        rest = NULL;   
         return (result);
     }
-    result = ft_substr(*line, 0, line_len);    
-    tmp = ft_substr(*line, 0, line_len); 
+    result = ft_substr(rest, 0, line_len);    
+    tmp = ft_substr(rest, 0, line_len); 
     result = print_line_aux(result, tmp);
-    *line = print_line_carrier(result, tmp);
+    rest = print_line_carrier(result, tmp);
     
-    return (result);
-}
+    return (rest);
+} */
 
-void read_line(char **line, char *buf, int fd) 
+char *read_line(char *line, int fd, char *buf) 
 {
     int byte_read;
     char *tmp;
-
-    if (!*line || !ft_strchr(buf, '\n')) // caso nao encontre o \n
+ 
+    if (!line || !ft_strchr(line, '\n')) // caso nao encontre o \n
     {
-        byte_read = read(fd, buf, BUFFER_SIZE);
-        if(byte_read == -1)
-            free(buf);
-        while(byte_read != 0)
+        byte_read = read(fd, buf, BUFFER_SIZE);        
+        while(byte_read > 0)
         { 
             buf[byte_read] = '\0';
-            if (!*line)
-                *line = ft_substr(buf, 0, byte_read);              
+            if (!line)
+                line = ft_substr(buf, 0, byte_read);              
             else 
             {
-                tmp = *line;
-                *line = ft_strjoin(*line, buf);
+                tmp = line;
+                line = ft_strjoin(line, buf); 
                 free(tmp);
-            }            
-                if(ft_strchr(buf, '\n'))
+            }             
+            if(ft_strchr(line, '\n'))
                     break;
             byte_read = read(fd, buf, BUFFER_SIZE);
         }
-    }   
-    free(buf); 
-    buf[0] = '\0';
+    }    
+    free(buf);   
+    return(line);
+}
+char *free_line(char *line)
+{
+    free(line);
+    line = 0;
+    return line;
 }
 
 char *get_next_line(int fd) 
 {
     static char *line;
-    char *buf;   
-    
-    buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+    char    *buf;  
+    char    *result;
+    int     line_size;
+    int     carrier;
+    char    *tmp;       
+       
+    buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
     if (!buf)
-        return (NULL);
-    if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, buf, 0) == -1)
+        return 0;
+    if (fd < 0 || BUFFER_SIZE < 1 || read(fd, line, 0) == -1)
     {
         free(buf);
-        return (NULL);
-    }    
-    read_line(&line, buf, fd);
-    
-    return(print_line(&line));
+        return (0);
+    }
+    line = read_line(line, fd, buf);
+     if (!line)            
+           return (NULL);       
+    line_size = ft_strlen(line);
+    if (line_size == 0)      
+       return (free_line(line));       
+     if (!ft_strchr(line, '\n'))
+     {
+        result = ft_substr(line, 0, line_size);            
+        line = free_line(line);      
+        return (result);         
+     }     
+    carrier = ft_strlen(ft_strchr(line, '\n')); 
+    result = ft_substr(line, 0, line_size - carrier + 1);    
+    tmp = line;
+    line = ft_substr(ft_strchr(line, '\n'), 1, carrier - 1); // retorna o * a carregar para a proxima linha
+    free(tmp);   
+    return (result);   
 }
+
+
 
 /* int main()
 {
@@ -129,9 +154,10 @@ char *get_next_line(int fd)
     int i = 0;
     
     fd = open("notas.txt", O_RDONLY);
+    //printf("%d", fd);
     //fd = open("teste.txt", O_RDONLY);
     //fd = open("The_new_text.txt", O_RDONLY);
-    while(i < 25)
+    while(i < 3)
     {
         //printf("BUFFER_SIZE: %d", BUFFER_SIZE);
         printf("%s", get_next_line(fd));
