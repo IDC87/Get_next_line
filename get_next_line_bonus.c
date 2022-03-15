@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ivda-cru <ivda-cru@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/03 19:18:57 by ivda-cru          #+#    #+#             */
-/*   Updated: 2022/03/15 18:06:00 by ivda-cru         ###   ########.fr       */
+/*   Updated: 2022/03/15 19:20:24 by ivda-cru         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*read_line(char *line, int fd, char *buf)
 {
@@ -72,7 +72,7 @@ char	*get_next_line(int fd)
 	char		*result;
 
 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf || fd < 0 || BUFFER_SIZE < 1 || read(fd, line, 0) == -1)
+	if (!buf || fd < 0 || BUFFER_SIZE < 1 || read(fd, buf, 0) == -1)
 	{
 		free(buf);
 		return (0);
